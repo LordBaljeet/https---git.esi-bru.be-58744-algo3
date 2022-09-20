@@ -15,6 +15,7 @@ public class MyNode<E> {
     }
 
     public MyNode getPrevious() {
+        
         return previous;
     }
 

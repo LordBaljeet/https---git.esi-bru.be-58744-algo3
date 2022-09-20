@@ -15,6 +15,7 @@ public class MyLinkedList {
     }
 
     public boolean isEmpty() {
+        
         return size == 0;
     }
 
