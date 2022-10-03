@@ -35,8 +35,8 @@ public class MyNode<E> {
         return value;
     }
 
-    public void setValue(E value) {
-        this.value = value;
+    @Override
+    public String toString() {
+        return value != null ? "["+ value+ "]": "[null]";
     }
-    
 }

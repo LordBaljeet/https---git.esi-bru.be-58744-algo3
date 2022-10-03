@@ -6,8 +6,6 @@ public class test {
         MyLinkedList list = new MyLinkedList();
         // list.add("32");
         list.add("thanks");
-
-        System.out.println(list.get(0));
     }
     
 }

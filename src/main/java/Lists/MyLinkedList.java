@@ -1,152 +1,127 @@
 package Lists;
 
-public class MyLinkedList {
-
+public class MyLinkedList<E> {
     private static int size;
 
     private static MyNode firstNode;
 
     private static MyNode lastNode;
 
-    public MyLinkedList() {}
+    public MyLinkedList() {
+    }
 
     public int size() {
         return size;
     }
 
-    public boolean isEmpty() {
-        
-        return size == 0;
+    public void add(E value) {
+        firstNode = new MyNode(null, value, firstNode);
+        size++;
     }
 
-    public boolean contains(Object o) {
+    public boolean contains(E value) {
 
-        MyNode node = firstNode;
+        if (firstNode == null) {
+            return false;
+        }
+        MyNode currentNode = firstNode;
 
-        for (int i = 0; i < size; i++) {
-            if (node.getValue() == o) {
+        do {
+            if (currentNode.getValue().equals(value)) {
+
                 return true;
             }
-            if (node != lastNode) node = node.getNext();
+
+            currentNode = currentNode.getNext();
+
+        } while (currentNode != null && currentNode.getNext() != null);
+
+        return false;
+    }
+
+    public MyNode getNode(E value) {
+
+        if (firstNode == null) {
+            return null;
+        }
+
+        MyNode currentNode = firstNode;
+
+        do {
+            if (currentNode.getValue().equals(value)) {
+
+                return currentNode;
+            }
+
+            currentNode = currentNode.getNext();
+
+        } while (currentNode != null && currentNode.getNext() != null);
+
+        return null;
+    }
+
+    public boolean deleteFirstOccurrence(E value) {
+
+        MyNode targetNode = getNode(value);
+
+        if (targetNode != null) {
+
+            if (targetNode == lastNode) {
+                MyNode previousNode = targetNode.getPrevious();
+                previousNode.setNext(null);
+                lastNode = previousNode;
+                return true;
+            } else if (targetNode == firstNode) {
+                MyNode nextNode = targetNode.getNext();
+                nextNode.setPrevious(null);
+                firstNode = nextNode;
+                return true;
+            } else {
+                MyNode nextNode = targetNode.getNext();
+                MyNode previousNode = targetNode.getPrevious();
+                previousNode.setNext(nextNode);
+                nextNode.setPrevious(previousNode);
+                return true;
+            }
         }
         return false;
     }
-    public boolean add(Object o) {
 
-        MyNode node;
+    public int deleteAllOccurrences(E value) {
 
-        if(firstNode == null) {
-            node = new MyNode(null, o, null);
-            firstNode = node;
-        }
-        else {
-            node = new MyNode(lastNode, o, null);
-            lastNode.setNext(node);
-        }
-        lastNode = node;
+        int count = 0;
+        int prevCount = 0;
 
-        size++;
+        do {
+            prevCount = count;
 
-        return true;
-    }
-    public boolean remove(Object o) {
-        if (!contains(o)) {
-            return false;
-        }
-
-        MyNode node = firstNode;
-        for (int i = 0; i < size; i++) {
-            if(node.getValue() == o) {
-                MyNode previousNode = node.getPrevious();
-                MyNode nextNode = node.getNext();
-                previousNode.setNext(nextNode);
-                nextNode.setPrevious(previousNode);
-                node = null;
-                return true;
+            if (deleteFirstOccurrence(value)) {
+                count++;
             }
-            if (node != lastNode) node = node.getNext();
-        }
-        size--;
-        return true;
+
+        } while (count > prevCount);
+
+        return count;
     }
 
-    public MyNode get(int index) {
+    public void deleteMostOccurrence() {
 
-        if(index >= size || index < 0) {
-            throw new IllegalArgumentException("Index out of range" + index);
+        int[] tab = new int[10];
+
+        MyNode currentNode = firstNode;
+
+        for (int i = 0; i < size - 1; i++) {
+            tab[(int) currentNode.getValue()] = (int) currentNode.getValue();
+            currentNode = currentNode.getNext();
         }
 
-        MyNode node = firstNode;
-
-        for (int i = 0; i < index; i++) {
-            node = node.getNext();
-        }
-        return node;
-    }
-
-    public MyNode set(int index, Object element) {
-
-        if(index >= size || index < 0) {
-            throw new IllegalArgumentException("Index out of range" + index);
-        }
-
-        MyNode node = get(index);
-        node.setValue(element);
-
-        return node;
-    }
-
-    public void add(int index, Object element) {
-
-        if(index >= size || index < 0) {
-            throw new IllegalArgumentException("Index out of range" + index);
-        }
-
-        MyNode oldNode = get(index);
-        MyNode newNode = new MyNode(oldNode.getPrevious(), element, oldNode);
-        oldNode.getPrevious().setNext(newNode);
-        oldNode.setPrevious(newNode);
-
-        size++;
-
-    }
-
-    public Object remove(int index) {
-
-        if(index >= size || index < 0) {
-            throw new IllegalArgumentException("Index out of range" + index);
-        }
-
-        MyNode node = firstNode;
-
-        for (int i = 0; i < index; i++) {
-            node = node.getNext();
-        }
-
-        MyNode nodeCopy = node;
-
-        node = null;
-
-        size--;
-
-        return nodeCopy;
-    }
-
-    public int indexOf(Object o) {
-        if (!contains(o)) {
-            throw new IllegalArgumentException("no such element in the list!");
-        }
-
-        MyNode node = firstNode;
-        int index = 0;
-        for (int i = 0; i < size; i++) {
-            if(node.getValue() == o) {
-                index = i;
-                break;
+        int mostOccurrence = 0;
+        for (int value :
+                tab) {
+            if (value >= mostOccurrence) {
+                mostOccurrence = value;
             }
-            if (node != lastNode) node = node.getNext();
         }
-        return index;
+//        deleteAllOccurrences(mostOccurrence);
     }
-
 }
